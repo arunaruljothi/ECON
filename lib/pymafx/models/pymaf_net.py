@@ -4,18 +4,32 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from lib.common.config import cfg
-from lib.pymafx.core import constants
-from lib.pymafx.utils.cam_params import homo_vector
-from lib.pymafx.utils.geometry import (
-    compute_twist_rotation,
-    projection,
-    rot6d_to_rotmat,
-    rotation_matrix_to_angle_axis,
-    rotmat_to_rot6d,
-)
-from lib.pymafx.utils.imutils import j2d_processing
-from lib.smplx.lbs import batch_rodrigues
+try:
+    from ...common.config import cfg
+    from ..core import constants
+    from ..utils.cam_params import homo_vector
+    from ..utils.geometry import (
+        compute_twist_rotation,
+        projection,
+        rot6d_to_rotmat,
+        rotation_matrix_to_angle_axis,
+        rotmat_to_rot6d,
+    )
+    from ..utils.imutils import j2d_processing
+    from ...smplx.lbs import batch_rodrigues
+except ImportError:
+    from lib.common.config import cfg
+    from lib.pymafx.core import constants
+    from lib.pymafx.utils.cam_params import homo_vector
+    from lib.pymafx.utils.geometry import (
+        compute_twist_rotation,
+        projection,
+        rot6d_to_rotmat,
+        rotation_matrix_to_angle_axis,
+        rotmat_to_rot6d,
+    )
+    from lib.pymafx.utils.imutils import j2d_processing
+    from lib.smplx.lbs import batch_rodrigues
 
 from .attention import get_att_block
 from .hr_module import get_hrnet_encoder
@@ -1269,7 +1283,7 @@ class PyMAF(nn.Module):
     def forward(self, batch={}, J_regressor=None, rw_cam={}):
         '''
         Args:
-            batch: input dictionary, including 
+            batch: input dictionary, including
                    images: 'img_{part}', for part in body, hand, and face if applicable
                    inversed affine transformation for the cropping of hand/face images: '{part}_theta_inv' for part in lhand, rhand, and face if applicable
             J_regressor: joint regression matrix

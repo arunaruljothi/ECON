@@ -1,9 +1,14 @@
 import torch
 from pytorch3d.structures import Meshes, Pointclouds
 
-from lib.common.render_utils import face_vertices
-from lib.dataset.Evaluator import point_mesh_distance
-from lib.dataset.mesh_util import SMPLX, barycentric_coordinates_of_projection
+try:
+    from ..common.render_utils import face_vertices
+    from .Evaluator import point_mesh_distance
+    from .mesh_util import SMPLX, barycentric_coordinates_of_projection
+except ImportError:
+    from lib.common.render_utils import face_vertices
+    from lib.dataset.Evaluator import point_mesh_distance
+    from lib.dataset.mesh_util import SMPLX, barycentric_coordinates_of_projection
 
 
 class PointFeat:

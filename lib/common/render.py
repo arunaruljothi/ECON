@@ -41,9 +41,14 @@ from pytorch3d.structures import Meshes
 from termcolor import colored
 from tqdm import tqdm
 
-import lib.common.render_utils as util
-from lib.common.imutils import blend_rgb_norm
-from lib.dataset.mesh_util import get_visibility
+try:
+    from ..common import render_utils as util
+    from .imutils import blend_rgb_norm
+    from ..dataset.mesh_util import get_visibility
+except ImportError:
+    import lib.common.render_utils as util
+    from lib.common.imutils import blend_rgb_norm
+    from lib.dataset.mesh_util import get_visibility
 
 
 def image2vid(images, vid_path):

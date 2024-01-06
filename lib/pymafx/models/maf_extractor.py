@@ -8,15 +8,22 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from lib.pymafx.core import path_config
-from lib.pymafx.utils.geometry import projection
-
-logger = logging.getLogger(__name__)
-
-from lib.pymafx.utils.imutils import j2d_processing
+try:
+    from ..core import path_config
+    from ..utils.geometry import projection
+    from ..utils.imutils import j2d_processing
+except ImportError:
+    from lib.pymafx.core import path_config
+    from lib.pymafx.utils.geometry import projection
+    from lib.pymafx.utils.imutils import j2d_processing
 
 from .transformers.net_utils import PosEnSine
 from .transformers.transformer_basics import OurMultiheadAttention
+
+logger = logging.getLogger(__name__)
+
+
+
 
 
 class TransformerDecoderUnit(nn.Module):
@@ -230,11 +237,11 @@ class MAF_Extractor(nn.Module):
 
     def sampling(self, points, im_feat=None, z_feat=None, add_att=False, reduce_dim=True):
         '''
-        Given 2D points, sample the point-wise features for each point, 
+        Given 2D points, sample the point-wise features for each point,
         the dimension of point-wise features will be reduced from C_s to C_p by MLP.
         Image features should be pre-computed before this call.
         :param points: [B, N, 2] image coordinates of points
-        :im_feat: [B, C_s, H_s, W_s] spatial feature maps 
+        :im_feat: [B, C_s, H_s, W_s] spatial feature maps
         :return: [B, C_p x N] concatantion of point-wise features after dimension reduction
         '''
         # if im_feat is None:

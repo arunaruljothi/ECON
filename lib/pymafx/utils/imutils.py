@@ -7,7 +7,10 @@ import skimage.transform
 import torch
 from PIL import Image
 
-from lib.pymafx.core import constants
+try:
+    from ..core import constants
+except ImportError:
+    from lib.pymafx.core import constants
 
 
 def get_transform(center, scale, res, rot=0):

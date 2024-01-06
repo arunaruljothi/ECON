@@ -10,16 +10,28 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from lib.pymafx.core import constants, path_config
-from lib.smplx import SMPL as _SMPL
-from lib.smplx import FLAMELayer, MANOLayer, SMPLXLayer
-from lib.smplx.body_models import SMPLXOutput
-from lib.smplx.lbs import (
-    batch_rodrigues,
-    blend_shapes,
-    transform_mat,
-    vertices2joints,
-)
+try:
+    from ..core import constants, path_config
+    from ...smplx import SMPL as _SMPL
+    from ...smplx import FLAMELayer, MANOLayer, SMPLXLayer
+    from ...smplx.body_models import SMPLXOutput
+    from ...smplx.lbs import (
+        batch_rodrigues,
+        blend_shapes,
+        transform_mat,
+        vertices2joints,
+    )
+except ImportError:
+    from lib.pymafx.core import constants, path_config
+    from lib.smplx import SMPL as _SMPL
+    from lib.smplx import FLAMELayer, MANOLayer, SMPLXLayer
+    from lib.smplx.body_models import SMPLXOutput
+    from lib.smplx.lbs import (
+        batch_rodrigues,
+        blend_shapes,
+        transform_mat,
+        vertices2joints,
+    )
 
 SMPL_MEAN_PARAMS = path_config.SMPL_MEAN_PARAMS
 SMPL_MODEL_DIR = path_config.SMPL_MODEL_DIR

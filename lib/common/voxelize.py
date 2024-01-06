@@ -7,8 +7,12 @@ import trimesh
 from scipy import ndimage
 from skimage.measure import block_reduce
 
-from lib.common.libmesh.inside_mesh import check_mesh_contains
-from lib.common.libvoxelize.voxelize import voxelize_mesh_
+try:
+    from .libmesh.inside_mesh import check_mesh_contains
+    from .libvoxelize.voxelize import voxelize_mesh_
+except ImportError:
+    from lib.common.libmesh.inside_mesh import check_mesh_contains
+    from lib.common.libvoxelize.voxelize import voxelize_mesh_
 
 # From Occupancy Networks, Mescheder et. al. CVPR'19
 

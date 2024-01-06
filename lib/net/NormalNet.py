@@ -18,9 +18,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from lib.net.BasePIFuNet import BasePIFuNet
-from lib.net.FBNet import GANLoss, IDMRFLoss, VGGLoss, define_D, define_G
-from lib.net.net_util import init_net
+from .BasePIFuNet import BasePIFuNet
+from .FBNet import GANLoss, IDMRFLoss, VGGLoss, define_D, define_G
+from .net_util import init_net
 
 
 class NormalNet(BasePIFuNet):

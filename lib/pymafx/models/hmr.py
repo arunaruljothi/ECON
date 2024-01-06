@@ -8,7 +8,10 @@ import torch
 import torch.nn as nn
 import torchvision.models.resnet as resnet
 
-from lib.net.geometry import rot6d_to_rotmat
+try:
+    from ...net.geometry import rot6d_to_rotmat
+except ImportError:
+    from lib.net.geometry import rot6d_to_rotmat
 
 logger = logging.getLogger(__name__)
 

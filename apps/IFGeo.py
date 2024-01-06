@@ -18,8 +18,12 @@ import numpy as np
 import pytorch_lightning as pl
 import torch
 
-from lib.common.seg3d_lossless import Seg3dLossless
-from lib.common.train_util import *
+try:
+    from ..lib.common.seg3d_lossless import Seg3dLossless
+    from ..lib.common.train_util import query_func_IF, batch_mean
+except ImportError:
+    from lib.common.seg3d_lossless import Seg3dLossless
+    from lib.common.train_util import query_func_IF, batch_mean
 
 torch.backends.cudnn.benchmark = True
 
@@ -38,10 +42,18 @@ class IFGeo(pl.LightningModule):
         self.overfit = cfg.overfit
 
         if cfg.dataset.prior_type == "SMPL":
-            from lib.net.IFGeoNet import IFGeoNet
+            try:
+                from ..lib.net.IFGeoNet import IFGeoNet
+            except ImportError:
+                from lib.net.IFGeoNet import IFGeoNet
+
             self.netG = IFGeoNet(cfg)
         else:
-            from lib.net.IFGeoNet_nobody import IFGeoNet
+            try:
+                from ..lib.net.IFGeoNet_nobody import IFGeoNet
+            except ImportError:
+                from lib.net.IFGeoNet_nobody import IFGeoNet
+
             self.netG = IFGeoNet(cfg)
 
         self.resolutions = (

@@ -17,6 +17,7 @@
 import json
 import os
 import os.path as osp
+from tempfile import gettempdir
 
 import _pickle as cPickle
 import numpy as np
@@ -31,8 +32,9 @@ from pytorch3d.renderer.mesh import rasterize_meshes
 from pytorch3d.structures import Meshes
 from scipy.spatial import cKDTree
 
-import lib.smplx as smplx
-from lib.common.render_utils import Pytorch3dRasterizer, face_vertices
+from .. import smplx as smplx
+from ..common.render_utils import Pytorch3dRasterizer, face_vertices
+
 
 
 class Format:
@@ -259,7 +261,7 @@ def part_removal(full_mesh, part_mesh, thres, device, smpl_obj, region, clean=Tr
     smpl_tree = cKDTree(smpl_obj.vertices)
     SMPL_container = SMPLX()
 
-    from lib.dataset.PointFeat import PointFeat
+    from .PointFeat import PointFeat
 
     part_extractor = PointFeat(
         torch.tensor(part_mesh.vertices).unsqueeze(0).to(device),
@@ -327,7 +329,7 @@ class HoppeMesh:
 
     def get_colors(self, points, faces):
         """
-        Get colors of surface points from texture image through 
+        Get colors of surface points from texture image through
         barycentric interpolation.
         - points: [n, 3]
         - return: [n, 4] rgba
@@ -397,14 +399,19 @@ def remesh_laplacian(mesh, obj_path, face_count=50000):
     mesh = trimesh.smoothing.filter_humphrey(
         mesh, alpha=0.1, beta=0.5, iterations=10, laplacian_operator=None
     )
-    mesh.export(obj_path)
+
+    if obj_path is not None:
+        mesh.export(obj_path)
 
     return mesh
 
 
 def poisson(mesh, obj_path, depth=10, face_count=50000, laplacian_remeshing=False):
 
-    pcd_path = obj_path[:-4] + "_soups.ply"
+    if obj_path is None:
+        pcd_path = os.path.join(gettempdir(), 'soups.ply')
+    else:
+        pcd_path = obj_path[:-4] + "_soups.ply"
     assert (mesh.vertex_normals.shape[1] == 3)
     mesh.export(pcd_path)
     pcl = o3d.io.read_point_cloud(pcd_path)
@@ -422,7 +429,9 @@ def poisson(mesh, obj_path, depth=10, face_count=50000, laplacian_remeshing=Fals
         low_res_mesh = trimesh.smoothing.filter_humphrey(
             low_res_mesh, alpha=0.1, beta=0.5, iterations=10, laplacian_operator=None
         )
-    low_res_mesh.export(obj_path)
+
+    if obj_path is not None:
+        low_res_mesh.export(obj_path)
 
     return low_res_mesh
 
@@ -525,7 +534,7 @@ def barycentric_coordinates_of_projection(points, vertices):
     See
         **Heidrich**, Computing the Barycentric Coordinates of a Projected Point, JGT 05
         at http://www.cs.ubc.ca/~heidrich/Papers/JGT.05.pdf
-    
+
     :param p: point to project. [B, 3]
     :param v0: first vertex of triangles. [B, 3]
     :returns: barycentric coordinates of ``p``'s projection in triangle defined by ``q``, ``u``, ``v``
@@ -687,7 +696,7 @@ def get_optim_grid_image(per_loop_lst, loss=None, nrow=4, type="smpl"):
         else:
             print(f"{type} should be 'smpl' or 'cloth'")
 
-    grid_img = grid_img.resize((grid_img.size[0], grid_img.size[1]), Image.ANTIALIAS)
+    grid_img = grid_img.resize((grid_img.size[0], grid_img.size[1]), Image.Resampling.LANCZOS)
 
     return grid_img
 

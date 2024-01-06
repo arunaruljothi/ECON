@@ -1,3 +1,9 @@
+try:
+    from ...smplx import joint_names as smplx_joint_name
+except ImportError:
+    import lib.smplx.joint_names as smplx_joint_name
+
+
 # This script is borrowed and extended from https://github.com/nkolot/SPIN/blob/master/constants.py
 FOCAL_LENGTH = 5000.0
 IMG_RES = 224
@@ -156,7 +162,6 @@ HAND_NAMES = [
     'pinky2', 'pinky3', 'pinky'
 ]
 
-import lib.smplx.joint_names as smplx_joint_name
 
 SMPLX_JOINT_NAMES = smplx_joint_name.JOINT_NAMES
 SMPLX_JOINT_IDS = {SMPLX_JOINT_NAMES[i]: i for i in range(len(SMPLX_JOINT_NAMES))}

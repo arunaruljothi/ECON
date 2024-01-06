@@ -12,7 +12,10 @@ from rembg import remove
 from rembg.session_factory import new_session
 from torchvision import transforms
 
-from lib.pymafx.core import constants
+try:
+    from ..pymafx.core import constants
+except ImportError:
+    from lib.pymafx.core import constants
 
 
 def transform_to_tensor(res, mean=None, std=None, is_tensor=False):
@@ -173,9 +176,10 @@ def remove_floats(mask):
     return new_mask
 
 
-def process_image(img_file, hps_type, single, input_res, detector):
+def process_image(img_file, hps_type, single, input_res, detector, img_raw = None, in_height = None, in_width = None):
 
-    img_raw, (in_height, in_width) = load_img(img_file)
+    if img_raw is None or in_height is None or in_width is None:
+        img_raw, (in_height, in_width) = load_img(img_file)
     tgt_res = input_res * 2
     M_square = get_affine_matrix_wh(in_width, in_height, tgt_res, tgt_res)
     img_square = warp_affine(
@@ -284,7 +288,7 @@ def process_image(img_file, hps_type, single, input_res, detector):
 
     return_dict = {
         "img_icon": torch.stack(img_icon_lst).float(),    #[N, 3, res, res]
-        "img_crop": torch.stack(img_crop_lst).float(),    #[N, 4, res, res]               
+        "img_crop": torch.stack(img_crop_lst).float(),    #[N, 4, res, res]
         "img_hps": torch.stack(img_hps_lst).float(),    #[N, 3, res, res]
         "img_raw": img_raw,    #[1, 3, H, W]
         "img_mask": torch.stack(img_mask_lst).float(),    #[N, res, res]

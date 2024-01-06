@@ -3,8 +3,12 @@ import pytorch_lightning as pl
 import torch
 from skimage.transform import resize
 
-from lib.common.train_util import batch_mean
-from lib.net import NormalNet
+try:
+    from ..lib.common.train_util import batch_mean
+    from ..lib.net import NormalNet
+except ImportError:
+    from lib.common.train_util import batch_mean
+    from lib.net import NormalNet
 
 
 class Normal(pl.LightningModule):

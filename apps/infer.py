@@ -209,6 +209,7 @@ if __name__ == "__main__":
             in_tensor["smpl_faces"] = batch_smpl_faces[:, :, [0, 2, 1]]
 
         else:
+
             # smpl optimization
             loop_smpl = tqdm(range(args.loop_smpl))
 

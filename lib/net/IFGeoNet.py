@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from lib.net.geometry import orthogonal
+from .geometry import orthogonal
 
 
 class SelfAttention(torch.nn.Module):

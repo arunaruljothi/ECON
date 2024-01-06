@@ -11,9 +11,12 @@ from pytorch3d.loss import chamfer_distance
 from pytorch3d.structures import Meshes
 from tqdm import tqdm
 
-from lib.common.train_util import init_loss
-from lib.dataset.mesh_util import update_mesh_shape_prior_losses
-
+try:
+    from .train_util import init_loss
+    from ..dataset.mesh_util import update_mesh_shape_prior_losses
+except ImportError:
+    from lib.common.train_util import init_loss
+    from lib.dataset.mesh_util import update_mesh_shape_prior_losses
 
 # reference: https://github.com/wuhaozhe/pytorch-nicp
 class LocalAffine(nn.Module):
@@ -40,7 +43,7 @@ class LocalAffine(nn.Module):
     def stiffness(self):
         '''
             calculate the stiffness of local affine transformation
-            f norm get infinity gradient when w is zero matrix, 
+            f norm get infinity gradient when w is zero matrix,
         '''
         if self.edges is None:
             raise Exception("edges cannot be none when calculate stiff")

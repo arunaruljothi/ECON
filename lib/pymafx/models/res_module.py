@@ -10,7 +10,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from lib.pymafx.core.cfgs import cfg
+try:
+    from ..core.cfgs import cfg
+except ImportError:
+    from lib.pymafx.core.cfgs import cfg
 
 # from .transformers.tokenlearner import TokenLearner
 

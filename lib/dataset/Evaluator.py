@@ -27,8 +27,13 @@ from torch.autograd import Function
 from torch.autograd.function import once_differentiable
 from torchvision.utils import make_grid
 
-from lib.common.render import Render
-from lib.dataset.mesh_util import projection
+try:
+    from ..common.render import Render
+    from .mesh_util import projection
+except ImportError:
+    from lib.common.render import Render
+    from lib.dataset.mesh_util import projection
+
 
 _DEFAULT_MIN_TRIANGLE_AREA: float = 5e-3
 

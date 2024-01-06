@@ -18,7 +18,10 @@ from cupyx.scipy.sparse.linalg import cg
 from PIL import Image
 from tqdm.auto import tqdm
 
-from lib.dataset.mesh_util import clean_floats
+try:
+    from ..dataset.mesh_util import clean_floats
+except ImportError:
+    from lib.dataset.mesh_util import clean_floats
 
 
 def find_max_list(lst):
@@ -707,8 +710,6 @@ def double_side_bilateral_normal_integration(
 
 def save_normal_tensor(in_tensor, idx, png_path, thickness=0.0):
 
-    os.makedirs(os.path.dirname(png_path), exist_ok=True)
-
     normal_F_arr = tensor2arr(in_tensor["normal_F"][idx:idx + 1])
     normal_B_arr = tensor2arr(in_tensor["normal_B"][idx:idx + 1])
     mask_normal_arr = tensor2arr(in_tensor["image"][idx:idx + 1], True)
@@ -726,6 +727,8 @@ def save_normal_tensor(in_tensor, idx, png_path, thickness=0.0):
     BNI_dict["depth_B"] = 100. - depth_B_arr + thickness
     BNI_dict["depth_mask"] = depth_F_arr != -1.0
 
-    np.save(png_path + ".npy", BNI_dict, allow_pickle=True)
+    if png_path is not None:
+        os.makedirs(os.path.dirname(png_path), exist_ok=True)
+        np.save(png_path + ".npy", BNI_dict, allow_pickle=True)
 
     return BNI_dict

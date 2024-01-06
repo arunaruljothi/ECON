@@ -1,12 +1,18 @@
 import torch
 import trimesh
 
-from lib.common.BNI_utils import (
-    depth_inverse_transform,
-    double_side_bilateral_normal_integration,
-    verts_inverse_transform,
-)
-
+try:
+    from .BNI_utils import (
+        depth_inverse_transform,
+        double_side_bilateral_normal_integration,
+        verts_inverse_transform,
+    )
+except ImportError:
+    from lib.common.BNI_utils import (
+        depth_inverse_transform,
+        double_side_bilateral_normal_integration,
+        verts_inverse_transform,
+    )
 
 class BNI:
     def __init__(self, dir_path, name, BNI_dict, cfg, device):
